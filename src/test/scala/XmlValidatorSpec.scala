@@ -14,7 +14,9 @@ class XmlValidatorSpec extends WordSpec with Matchers {
     "<foo>&xxe;</foo>"
 
 
-  private val safeXml = "<foo>hello</foo>"
+  private val safeXml = "<foo>hello<bar>world</bar></foo>"
+
+  private val partialXml = "<foo>hello<bar>world</bar>"
 
   "XmlValidator safe parse" should {
 
@@ -45,6 +47,13 @@ class XmlValidatorSpec extends WordSpec with Matchers {
       val errorMsg: String = result.left.get
       errorMsg.contains("ParseError") shouldBe true
       errorMsg.contains("The entity \"xxe\" was referenced, but not declared.") shouldBe true
+    }
+
+    "return success (Right) if the bytes are XML that is valid and safe AND CAN BE STREAMED" in {
+      val xmlValidator = new XmlValidator()
+      val result = xmlValidator.secureValidate(partialXml.getBytes)
+//    TODO
+//    result.isRight shouldBe true
     }
   }
 
