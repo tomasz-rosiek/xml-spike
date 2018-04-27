@@ -57,8 +57,9 @@ object ExplicitAnalysisXMLSafetyChecker {
   private def buildXmlInputFactory(resolvedEntityHandler: String => Unit): XMLInputFactory = {
     val xmlInputFactory = XMLInputFactory.newFactory()
     xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, true)
+    xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true)
     xmlInputFactory.setProperty(
-      "javax.xml.stream.resolver",
+      XMLInputFactory.RESOLVER,
       new XMLResolver {
         override def resolveEntity(publicId: String, systemId: String, baseUri: String, namespace: String): AnyRef = {
           resolvedEntityHandler(systemId)
@@ -66,7 +67,7 @@ object ExplicitAnalysisXMLSafetyChecker {
         }
       }
     )
-    xmlInputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", true)
+
     xmlInputFactory
   }
 }

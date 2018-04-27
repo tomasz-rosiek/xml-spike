@@ -58,6 +58,10 @@ class XMLSafetyCheckerSpec extends WordSpec with Matchers {
         |  <!ENTITY xxe PUBLIC "-//OASIS//DTD DocBook V4.1//EN" "file:///does/not/exist2" >]>
         |  <foo><<<<
         |  """.stripMargin,
+        false),
+      (
+        """<!DOCTYPE test [ <!ENTITY % init SYSTEM "data://text/plain;base64,ZmlsZTovLy9ldGMvcGFzc3dk"> %init; ]><foo/>
+         |""".stripMargin,
         false)
     )
 
